@@ -59,27 +59,28 @@ public class ScheduleToken {
     public void updateToken() throws JsonProcessingException {
         List<Token> tokens = tokenRepository.findAll();
 
-        for (Token token : tokens) {
-            List<JsonNode> jsons;
-            String uri = UriComponentsBuilder.newInstance().scheme("https").host("www.strava.com").path("/oauth/token")
-                    .queryParam("client_id", clientId)
-                    .queryParam("client_secret", clientSecret)
-                    .queryParam("refresh_token", token.getRefresh())
-                    .queryParam("grant_type", "refresh_token")
-                    .toUriString();
-            ResponseEntity<String> response = apiRequester.sendGetRequestForRefreshToken(uri);
-
-            String body = response.getBody();
-
-            jsons = objectMapper.readValue(body, new TypeReference<List<JsonNode>>() {});
-
-            JsonNode jsonNode = jsons.get(0);
-
-            Token updateToken = tokenRepository.findById(token.getId()).orElse(null);
-            updateToken.setAccess(jsonNode.get("access").asText());
-            updateToken.setRefresh(jsonNode.get("refresh").asText());
-            tokenRepository.save(updateToken);
-        }
+        System.out.println("abc");
+//        for (Token token : tokens) {
+//            List<JsonNode> jsons;
+//            String uri = UriComponentsBuilder.newInstance().scheme("https").host("www.strava.com").path("/oauth/token")
+//                    .queryParam("client_id", clientId)
+//                    .queryParam("client_secret", clientSecret)
+//                    .queryParam("refresh_token", token.getRefresh())
+//                    .queryParam("grant_type", "refresh_token")
+//                    .toUriString();
+//            ResponseEntity<String> response = apiRequester.sendGetRequestForRefreshToken(uri);
+//
+//            String body = response.getBody();
+//
+//            jsons = objectMapper.readValue(body, new TypeReference<List<JsonNode>>() {});
+//
+//            JsonNode jsonNode = jsons.get(0);
+//
+//            Token updateToken = tokenRepository.findById(token.getId()).orElse(null);
+//            updateToken.setAccess(jsonNode.get("access").asText());
+//            updateToken.setRefresh(jsonNode.get("refresh").asText());
+//            tokenRepository.save(updateToken);
+//        }
 
     }
 
