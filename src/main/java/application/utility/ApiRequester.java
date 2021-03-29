@@ -36,6 +36,25 @@ public class ApiRequester {
         }
     }
 
+    public ResponseEntity<String> sendGetRequest(String token, final String url) {
+
+        try {
+            final RestTemplate restTemplate = new RestTemplate();
+
+            final HttpHeaders headers = new HttpHeaders();
+            headers.setBearerAuth(token);
+            final HttpEntity<String> entity =
+                    new HttpEntity<String>("parameters", headers);
+
+            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+
+            return response;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
+
     public ResponseEntity<String> sendGetRequestForRefreshToken(final String url) {
 
         try {

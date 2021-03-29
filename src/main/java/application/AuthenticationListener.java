@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
@@ -23,13 +24,59 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.fasterxml.jackson.core.type.TypeReference;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+
+@Component
+public class AuthenticationListener implements ApplicationListener<ContextRefreshedEvent> {
+
+    private final ApiRequester apiRequester;
+    private final ObjectMapper objectMapper;
+    private final RunRepositoy runRepositoy;
+    private final TokenRepository tokenRepository;
+
+    @Autowired
+    public AuthenticationListener(ApiRequester apiRequester,
+                                  ObjectMapper objectMapper,
+                                  RunRepositoy runRepositoy,
+                                  TokenRepository tokenRepository
+    ) {
+        this.apiRequester = apiRequester;
+        this.objectMapper = objectMapper;
+        this.runRepositoy = runRepositoy;
+        this.tokenRepository = tokenRepository;
+    }
+
+    @SneakyThrows
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+
+        List<Token> tokens = tokenRepository.fetchAll();
+        for (Token token : tokens) {
+            List<JsonNode> jsons;
+            String uri = UriComponentsBuilder.newInstance().scheme("https").host("www.strava.com").path("/api/v3/athlete/activities")
+                    .toUriString();
+            ResponseEntity<String> response = apiRequester.sendGetRequest(token.getAccess(), uri);
+
+            String body = response.getBody();
+
+            jsons = objectMapper.readValue(body, new TypeReference<List<JsonNode>>() {});
+
+            for (JsonNode node : jsons) {
+                Run run = new Run();
+                run.setAthleteId(token.getAthleteId());
+                run.setDistance(node.get("distance").asDouble());
+                run.setMovingTime(node.get("moving_time").asInt());
+                run.setDate(node.get("start_date").asText());
+                runRepositoy.save(run);
+            }
+        }
+
+    }
+}
+
+/**
 @Component
 public class AuthenticationListener implements ApplicationListener<InteractiveAuthenticationSuccessEvent>{
 
@@ -102,3 +149,4 @@ public class AuthenticationListener implements ApplicationListener<InteractiveAu
         }
     }
 }
+*/

@@ -10,7 +10,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create-drop
     show-sql: false
 
   security:
@@ -23,7 +23,7 @@ spring:
             client-secret: ${CLIENT-SECRET:2f429b0d8b1fb765a86a147c985d229d9697800d}
             client-authentication-method: POST
             authorization-grant-type: authorization_code
-            redirect-uri: http://localhost:8080/login/oauth2/code/strava
+            redirect-uri: http://192.168.88.160:8080/login/oauth2/code/strava
             scope: activity:read_all
         provider:
           strava-provider:

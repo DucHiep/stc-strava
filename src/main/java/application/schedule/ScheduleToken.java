@@ -1,7 +1,9 @@
 package application.schedule;
 
+import application.model.Run;
 import application.model.Token;
 import application.model.User;
+import application.repository.RunRepositoy;
 import application.repository.TokenRepository;
 import application.repository.UserRepository;
 import application.utility.ApiRequester;
@@ -39,15 +41,18 @@ public class ScheduleToken {
     private final ApiRequester apiRequester;
     private final ObjectMapper objectMapper;
     private final UserRepository userRepository;
+    private final RunRepositoy runRepositoy;
 
     public ScheduleToken(TokenRepository tokenRepository,
                          ApiRequester apiRequester,
                          ObjectMapper objectMapper,
-                         UserRepository userRepository) {
+                         UserRepository userRepository,
+                         RunRepositoy runRepositoy) {
         this.tokenRepository = tokenRepository;
         this.apiRequester = apiRequester;
         this.objectMapper = objectMapper;
         this.userRepository = userRepository;
+        this.runRepositoy = runRepositoy;
     }
 
     @Scheduled(cron = "* * */6 * * *")//Chạy sau mỗi 5h
@@ -90,6 +95,14 @@ public class ScheduleToken {
         String body = response.getBody();
 
         jsons = objectMapper.readValue(body, new TypeReference<List<JsonNode>>() {});
+
+        JsonNode node = jsons.get(0);
+
+        Run run = new Run();
+        run.setDistance(node.get("distance").asDouble());
+        run.setMovingTime(node.get("moving_time").asInt());
+        run.setDate(node.get("start_date").asText());
+        runRepositoy.save(run);
 
     }
 }
