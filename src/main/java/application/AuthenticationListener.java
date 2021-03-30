@@ -1,5 +1,6 @@
 package application;
 
+import application.dto.RunDto;
 import application.model.Run;
 import application.model.Token;
 import application.model.User;
@@ -10,22 +11,16 @@ import application.utility.ApiRequester;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.List;
-import java.util.Map;
 
 
 @Component
@@ -65,9 +60,13 @@ public class AuthenticationListener implements ApplicationListener<ContextRefres
 
             for (JsonNode node : jsons) {
                 Run run = new Run();
+                double distance = node.get("distance").asDouble();
+                long movingTime = node.get("moving_time").asLong();
+                double avgPace = (double) distance / movingTime;
                 run.setAthleteId(token.getAthleteId());
-                run.setDistance(node.get("distance").asDouble());
-                run.setMovingTime(node.get("moving_time").asInt());
+                run.setDistance(distance);
+                run.setMovingTime(movingTime);
+                run.setPace(avgPace);
                 run.setDate(node.get("start_date").asText());
                 runRepositoy.save(run);
             }

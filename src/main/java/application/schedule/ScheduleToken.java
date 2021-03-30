@@ -1,5 +1,6 @@
 package application.schedule;
 
+import application.dto.RunDto;
 import application.model.Run;
 import application.model.Token;
 import application.model.User;
@@ -11,6 +12,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
@@ -59,28 +61,27 @@ public class ScheduleToken {
     public void updateToken() throws JsonProcessingException {
         List<Token> tokens = tokenRepository.findAll();
 
-        System.out.println("abc");
-//        for (Token token : tokens) {
-//            List<JsonNode> jsons;
-//            String uri = UriComponentsBuilder.newInstance().scheme("https").host("www.strava.com").path("/oauth/token")
-//                    .queryParam("client_id", clientId)
-//                    .queryParam("client_secret", clientSecret)
-//                    .queryParam("refresh_token", token.getRefresh())
-//                    .queryParam("grant_type", "refresh_token")
-//                    .toUriString();
-//            ResponseEntity<String> response = apiRequester.sendGetRequestForRefreshToken(uri);
-//
-//            String body = response.getBody();
-//
-//            jsons = objectMapper.readValue(body, new TypeReference<List<JsonNode>>() {});
-//
-//            JsonNode jsonNode = jsons.get(0);
-//
-//            Token updateToken = tokenRepository.findById(token.getId()).orElse(null);
-//            updateToken.setAccess(jsonNode.get("access").asText());
-//            updateToken.setRefresh(jsonNode.get("refresh").asText());
-//            tokenRepository.save(updateToken);
-//        }
+        for (Token token : tokens) {
+            List<JsonNode> jsons;
+            String uri = UriComponentsBuilder.newInstance().scheme("https").host("www.strava.com").path("/oauth/token")
+                    .queryParam("client_id", clientId)
+                    .queryParam("client_secret", clientSecret)
+                    .queryParam("refresh_token", token.getRefresh())
+                    .queryParam("grant_type", "refresh_token")
+                    .toUriString();
+            ResponseEntity<String> response = apiRequester.sendGetRequestForRefreshToken(uri);
+
+            String body = response.getBody();
+
+            jsons = objectMapper.readValue(body, new TypeReference<List<JsonNode>>() {});
+
+            JsonNode jsonNode = jsons.get(0);
+
+            Token updateToken = tokenRepository.findById(token.getId()).orElse(null);
+            updateToken.setAccess(jsonNode.get("access_token").asText());
+            updateToken.setRefresh(jsonNode.get("refresh_token").asText());
+            tokenRepository.save(updateToken);
+        }
 
     }
 
@@ -103,6 +104,7 @@ public class ScheduleToken {
         run.setDistance(node.get("distance").asDouble());
         run.setMovingTime(node.get("moving_time").asInt());
         run.setDate(node.get("start_date").asText());
+
         runRepositoy.save(run);
 
     }

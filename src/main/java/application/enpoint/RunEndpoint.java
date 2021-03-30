@@ -1,6 +1,7 @@
 package application.enpoint;
 
 
+import application.dto.RunDto;
 import application.model.Run;
 import application.service.RunService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,8 @@ public class RunEndpoint {
     private RunService runService;
 
     @RequestMapping(value="/run", method= RequestMethod.GET)
-    public ResponseEntity<List<Run>> getRunAll(){
-        List<Run> runs = runService.findRunAll();
+    public ResponseEntity<List<RunDto>> getRunAll(){
+        List<RunDto> runs = runService.findRunAll();
         return new ResponseEntity<>(runs, HttpStatus.OK);
     }
 }
