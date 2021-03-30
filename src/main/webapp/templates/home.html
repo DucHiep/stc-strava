@@ -1,0 +1,20 @@
+<h2>Danh sách người </h2>
+<table class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>Họ và </th>
+        <th>Đã chạy</th>
+        <th>Pace TB</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="run in runs">
+        <td>
+            <img ng-src="{{run.user.image}}" class="img-circle" alt={run.user.name} width="50" height="50" />
+            {run.user.name}
+        </td>
+        <td>{run.distance}</td>
+        <td>{run.pace}</td>
+    </tr>
+    </tbody>
+</table>
