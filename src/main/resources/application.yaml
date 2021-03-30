@@ -10,28 +10,14 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: none
     show-sql: false
 
-  security:
-    oauth2:
-      client:
-        registration:
-          strava:
-            provider: strava-provider
-            client-id: ${CLIENT-ID:63592}
-            client-secret: ${CLIENT-SECRET:2f429b0d8b1fb765a86a147c985d229d9697800d}
-            client-authentication-method: POST
-            authorization-grant-type: authorization_code
-            redirect-uri: http://192.168.88.160:8080/login/oauth2/code/strava
-            scope: activity:read_all
-        provider:
-          strava-provider:
-            tokenUri: https://www.strava.com/oauth/token
-            user-info-uri: https://www.strava.com/api/v3/athlete
-            user-name-attribute: id
-            authorization-uri: https://www.strava.com/oauth/authorize
-            token-uri: https://www.strava.com/oauth/token
+security:
+  oauth2:
+    client:
+      client-id: 63592
+      client-secret: 2f429b0d8b1fb765a86a147c985d229d9697800d
 
 logging:
   level:

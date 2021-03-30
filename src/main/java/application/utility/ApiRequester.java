@@ -4,7 +4,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -16,25 +15,6 @@ import org.springframework.web.client.RestTemplate;
  */
 @Component
 public class ApiRequester {
-
-    public ResponseEntity<String> sendGetRequest(final OAuth2AuthorizedClient client, final String url) {
-
-        try {
-            final RestTemplate restTemplate = new RestTemplate();
-
-            final HttpHeaders headers = new HttpHeaders();
-            headers.setBearerAuth(client.getAccessToken().getTokenValue());
-            final HttpEntity<String> entity =
-                    new HttpEntity<String>("parameters", headers);
-
-            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-
-            return response;
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
-        }
-    }
 
     public ResponseEntity<String> sendGetRequest(String token, final String url) {
 

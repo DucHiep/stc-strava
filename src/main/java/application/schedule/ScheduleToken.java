@@ -33,10 +33,10 @@ import java.util.List;
 @EnableScheduling
 public class ScheduleToken {
 
-    @Value("${spring.security.oauth2.client.registration.strava.client-id}")
+    @Value("${security.oauth2.client.client-id}")
     private String clientId;
 
-    @Value("${spring.security.oauth2.client.registration.strava.client-secret}")
+    @Value("${security.oauth2.client.client-secret}")
     private String clientSecret;
 
     private final TokenRepository tokenRepository;
