@@ -85,7 +85,8 @@ public class AuthenticationListener implements ApplicationListener<ContextRefres
                 double avgPace = (((movingTime)/60) / ((distance)/1000));
                 String date = node.get("start_date").asText();
 
-                LocalDate localDate = LocalDate.parse(date);
+                String[] splitDate = date.split("T");
+                LocalDate localDate = LocalDate.parse(splitDate[0]);
                 if ((localDate.getDayOfMonth() == 29 && localDate.getMonthValue() == 3) ||
                         (localDate.getDayOfMonth() == 30 && localDate.getMonthValue() == 3) ||
                         (localDate.getDayOfMonth() == 31 && localDate.getMonthValue() == 3)) {
