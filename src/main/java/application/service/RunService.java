@@ -29,7 +29,7 @@ public class RunService {
 
         for (Run run: runs) {
             RunDto runDto = new RunDto();
-            User user = userRepository.findById(run.getAthleteId()).orElse(null);
+            User user = userRepository.findByAthleteId(run.getAthleteId()).orElse(null);
             runDto.setAthleteId(run.getAthleteId());
             runDto.setDate(run.getDate());
             runDto.setDistance(run.getDistance());
