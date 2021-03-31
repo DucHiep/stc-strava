@@ -96,7 +96,7 @@ public class AuthenticationListener implements ApplicationListener<ContextRefres
                         run.setDistance(distance);
                         run.setMovingTime(movingTime);
                         run.setPace(avgPace);
-                        run.setDate(date);
+                        run.setDate(splitDate[0]);
                         runRepositoy.save(run);
                     }
                 }
