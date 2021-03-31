@@ -87,7 +87,6 @@ public class ScheduleToken {
 
     @Scheduled(cron = "0 0 * * * *")//chạy sau mỗi 0h 0p mỗi
     public void activitySync() throws JsonProcessingException {
-        List<User> users = userRepository.findAll();
 
         List<JsonNode> jsons;
         String uri = UriComponentsBuilder.newInstance().scheme("https").host("www.strava.com").path("api/v3/activities")
