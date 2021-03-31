@@ -4,9 +4,9 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/db_demo
+    url: jdbc:mysql://localhost:3306/quyen
     username: root
-    password: admin23456
+    password: root
 
   jpa:
     hibernate:
@@ -16,8 +16,8 @@ spring:
 security:
   oauth2:
     client:
-      client-id: 63592
-      client-secret: 2f429b0d8b1fb765a86a147c985d229d9697800d
+      client-id: 63587
+      client-secret: 90d9886e663cc8ab2cc408cfae62ae72cacb5586
 
 logging:
   level:

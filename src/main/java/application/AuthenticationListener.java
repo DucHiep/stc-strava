@@ -82,14 +82,14 @@ public class AuthenticationListener implements ApplicationListener<ContextRefres
                 Run run = new Run();
                 double distance = node.get("distance").asDouble();
                 long movingTime = node.get("moving_time").asLong();
-                double avgPace = (double) distance / movingTime;
+                double avgPace = (((movingTime)/60) / ((distance)/1000));
                 String date = node.get("start_date").asText();
 
                 LocalDate localDate = LocalDate.parse(date);
                 if ((localDate.getDayOfMonth() == 29 && localDate.getMonthValue() == 3) ||
                         (localDate.getDayOfMonth() == 30 && localDate.getMonthValue() == 3) ||
                         (localDate.getDayOfMonth() == 31 && localDate.getMonthValue() == 3)) {
-                    if (distance >= 2000 && movingTime >= 600) {
+                    if (distance >= 2000 && avgPace<=15.30 && avgPace>=3.30) {
                         run.setAthleteId(token.getAthleteId());
                         run.setDistance(distance);
                         run.setMovingTime(movingTime);
