@@ -34,7 +34,7 @@ public class Run {
         return pace;
     }
 
-    public void setPace(double pace) {
+    public void setPace(float pace) {
         this.pace = pace;
     }
 

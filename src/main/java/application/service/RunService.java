@@ -30,7 +30,11 @@ public class RunService {
         for (Run run: runs) {
             RunDto runDto = new RunDto();
             User user = userRepository.findById(run.getAthleteId()).orElse(null);
-            BeanUtils.copyProperties(run, runDto);
+            runDto.setAthleteId(run.getAthleteId());
+            runDto.setDate(run.getDate());
+            runDto.setDistance(run.getDistance());
+            runDto.setPace(Math.round((run.getPace()*100/100)));
+            runDto.setMovingTime(run.getMovingTime());
             runDto.setUser(user);
             runDtos.add(runDto);
         }

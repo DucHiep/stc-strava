@@ -18,7 +18,7 @@ public class RunDto {
     private long id;
     private long athleteId;
     private double distance;
-    private long pace;
+    private double pace;
     private String date;
     private long movingTime;
     @Transient
@@ -49,11 +49,11 @@ public class RunDto {
         this.distance = distance;
     }
 
-    public long getPace() {
+    public double getPace() {
         return pace;
     }
 
-    public void setPace(long pace) {
+    public void setPace(double pace) {
         this.pace = pace;
     }
 
