@@ -85,11 +85,13 @@ public class AuthenticationListener implements ApplicationListener<ContextRefres
                 double avgPace = (double) distance / movingTime;
                 String date = node.get("start_date").asText();
 
-                LocalDate localDate = LocalDate.parse(date);
+                String[] splitDate = date.split("T");
+                LocalDate localDate = LocalDate.parse(splitDate[0]);
+
                 if ((localDate.getDayOfMonth() == 29 && localDate.getMonthValue() == 3) ||
                         (localDate.getDayOfMonth() == 30 && localDate.getMonthValue() == 3) ||
                         (localDate.getDayOfMonth() == 31 && localDate.getMonthValue() == 3)) {
-                    if (distance >= 2000 && movingTime >= 600) {
+                    if (distance >= 2000 && (avgPace >= 3.0  || avgPace <= 15.30 )) {
                         run.setAthleteId(token.getAthleteId());
                         run.setDistance(distance);
                         run.setMovingTime(movingTime);
