@@ -33,7 +33,9 @@ public class RunService {
             runDto.setAthleteId(run.getAthleteId());
             runDto.setDate(run.getDate());
             runDto.setDistance(run.getDistance());
-            runDto.setPace(Math.round((run.getPace()*100/100)));
+            double a = run.getPace();
+            double a1 = Math.round(a*100.0)/100.0;
+            runDto.setPace(a1);
             runDto.setMovingTime(run.getMovingTime());
             runDto.setUser(user);
             runDtos.add(runDto);

@@ -53,8 +53,9 @@ public class RunDto {
         return pace;
     }
 
-    public void setPace(double pace) {
+    public double setPace(double pace) {
         this.pace = pace;
+        return pace;
     }
 
     public String getDate() {
