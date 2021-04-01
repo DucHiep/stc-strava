@@ -1,6 +1,7 @@
 package application.model;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name ="run")
@@ -11,7 +12,7 @@ public class Run {
     private long athleteId;
     private double distance;
     private double pace;
-    private String date;
+    private Date date;
     private long movingTime;
 
     public long getId() {
@@ -38,11 +39,11 @@ public class Run {
         this.pace = pace;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

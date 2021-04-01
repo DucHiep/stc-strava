@@ -8,7 +8,6 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
     private long athleteId;
     private String name;
     private String image;

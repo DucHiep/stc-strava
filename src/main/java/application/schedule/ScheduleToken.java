@@ -8,6 +8,7 @@ import application.repository.RunRepositoy;
 import application.repository.TokenRepository;
 import application.repository.UserRepository;
 import application.utility.ApiRequester;
+import application.utility.AppUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -20,6 +21,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -57,12 +59,12 @@ public class ScheduleToken {
         this.runRepositoy = runRepositoy;
     }
 
-    @Scheduled(cron = "* * */6 * * *")//Chạy sau mỗi 5h
+    @Scheduled(cron = "0 0 0 * * *")//chạy sau mỗi 0h 0p mỗi
     public void updateToken() throws JsonProcessingException {
         List<Token> tokens = tokenRepository.findAll();
 
         for (Token token : tokens) {
-            List<JsonNode> jsons;
+            JsonNode jsonNode;
             String uri = UriComponentsBuilder.newInstance().scheme("https").host("www.strava.com").path("/oauth/token")
                     .queryParam("client_id", clientId)
                     .queryParam("client_secret", clientSecret)
@@ -73,9 +75,7 @@ public class ScheduleToken {
 
             String body = response.getBody();
 
-            jsons = objectMapper.readValue(body, new TypeReference<List<JsonNode>>() {});
-
-            JsonNode jsonNode = jsons.get(0);
+            jsonNode = objectMapper.readValue(body, new TypeReference<JsonNode>() {});
 
             Token updateToken = tokenRepository.findById(token.getId()).orElse(null);
             updateToken.setAccess(jsonNode.get("access_token").asText());
@@ -85,26 +85,41 @@ public class ScheduleToken {
 
     }
 
-    @Scheduled(cron = "0 0 * * * *")//chạy sau mỗi 0h 0p mỗi
+    @Scheduled(cron = "0 0 0 * * *")//chạy sau mỗi 0h 0p mỗi
     public void activitySync() throws JsonProcessingException {
+        List<Token> tokens = tokenRepository.findAll();
+        for (Token token : tokens) {
+            List<JsonNode> jsons;
+            String uri = UriComponentsBuilder.newInstance().scheme("https").host("www.strava.com").path("api/v3/activities")
+                    .toUriString();
+            ResponseEntity<String> response = apiRequester.sendGetRequestForRefreshToken(uri);
 
-        List<JsonNode> jsons;
-        String uri = UriComponentsBuilder.newInstance().scheme("https").host("www.strava.com").path("api/v3/activities")
-                .toUriString();
-        ResponseEntity<String> response = apiRequester.sendGetRequestForRefreshToken(uri);
+            String body = response.getBody();
 
-        String body = response.getBody();
+            jsons = objectMapper.readValue(body, new TypeReference<List<JsonNode>>() {
+            });
 
-        jsons = objectMapper.readValue(body, new TypeReference<List<JsonNode>>() {});
+            JsonNode node = jsons.get(0);
 
-        JsonNode node = jsons.get(0);
+            double distance = node.get("distance").asDouble();
+            long movingTime = node.get("moving_time").asLong();
+            double avgPace = (movingTime / 60) / (distance / 1000);
+            String date = node.get("start_date").asText();
+            String type = node.get("type").asText();
 
-        Run run = new Run();
-        run.setDistance(node.get("distance").asDouble());
-        run.setMovingTime(node.get("moving_time").asInt());
-        run.setDate(node.get("start_date").asText());
+            String[] splitDate = date.split("T");
+            LocalDate localDate = LocalDate.parse(splitDate[0]);
 
-        runRepositoy.save(run);
+            Run run = new Run();
+            if (type.equals("Run")) {
+                run.setAthleteId(token.getAthleteId());
+                run.setDistance(distance);
+                run.setMovingTime(movingTime);
+                run.setPace(avgPace);
+                run.setDate(AppUtil.convertToDateViaInstant(localDate));
+                runRepositoy.save(run);
+            }
+        }
 
     }
 }
