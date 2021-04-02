@@ -59,7 +59,9 @@ public class RunService {
         HashMap<Long, Statistic> map = new HashMap<>();
         for (int i = 0; i < runs.size(); i++) {
             Long athleteId = runs.get(i).getAthleteId();
+            int count  = 0;
             if (map.containsKey(athleteId)) {
+                count++;
                 Statistic statistic = map.get(athleteId);
                 statistic.setAthleteId(athleteId);
                 statistic.setDistance(runs.get(i).getDistance() + map.get(athleteId).getDistance());
@@ -68,9 +70,10 @@ public class RunService {
                 if ((runLocalDate.getDayOfMonth() != mapLocalDate.getDayOfMonth()) || (runLocalDate.getMonthValue() != mapLocalDate.getMonthValue())) {
                     statistic.setRuns(map.get(athleteId).getRuns() + 1);
                 }
-                statistic.setAvgPace((runs.get(i).getPace() + map.get(athleteId).getAvgPace()));
+                statistic.setAvgPace((runs.get(i).getPace() + map.get(athleteId).getAvgPace())/count);
                 map.put(athleteId, statistic);
             } else {
+                count ++;
                 Statistic statistic = new Statistic();
                 statistic.setAthleteId(athleteId);
                 statistic.setDistance(runs.get(i).getDistance());
@@ -84,11 +87,8 @@ public class RunService {
         for (Map.Entry<Long, Statistic> entry : map.entrySet())
         {
             Statistic statistic = entry.getValue();
-            long count = statistic.getRuns();
-            double avgPage = statistic.getAvgPace()/count;
             User user = userRepository.findById(statistic.getAthleteId()).orElse(null);
             statistic.setUser(user);
-            statistic.setAvgPace(avgPage);
             statistics.add(statistic);
         }
 
