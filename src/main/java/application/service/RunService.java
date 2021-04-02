@@ -65,7 +65,7 @@ public class RunService {
                 statistic.setDistance(runs.get(i).getDistance() + map.get(athleteId).getDistance());
                 LocalDate runLocalDate = AppUtil.convertToLocalDateViaInstant(runs.get(i).getDate());
                 LocalDate mapLocalDate = AppUtil.convertToLocalDateViaInstant(map.get(athleteId).getDate());
-                if ((runLocalDate.getDayOfMonth() != mapLocalDate.getDayOfMonth()) && (runLocalDate.getMonthValue() != mapLocalDate.getMonthValue())) {
+                if ((runLocalDate.getDayOfMonth() != mapLocalDate.getDayOfMonth()) || (runLocalDate.getMonthValue() != mapLocalDate.getMonthValue())) {
                     statistic.setRuns(map.get(athleteId).getRuns() + 1);
                 }
                 statistic.setAvgPace((runs.get(i).getPace() + map.get(athleteId).getAvgPace()));
