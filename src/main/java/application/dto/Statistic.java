@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Transient;
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -21,7 +22,7 @@ public class Statistic {
     private long athleteId;
     private double avgPace;
     private long runs;
-    private Date date;
+    private LocalDate date;
     @Transient
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private User user;
@@ -74,11 +75,11 @@ public class Statistic {
         this.runs = runs;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 }

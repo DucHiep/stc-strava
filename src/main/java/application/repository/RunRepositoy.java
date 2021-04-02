@@ -6,8 +6,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface RunRepositoy extends JpaRepository<Run,Long> {
@@ -16,5 +18,5 @@ public interface RunRepositoy extends JpaRepository<Run,Long> {
     List<Run> fetchAll();
 
     @Query(value = "SELECT * FROM Run r WHERE r.date between ?1 and ?2 ", nativeQuery = true)
-    List<Run> statistic(Date fromDate, Date toDate);
+    List<Run> statistic(LocalDate fromDate, LocalDate toDate);
 }

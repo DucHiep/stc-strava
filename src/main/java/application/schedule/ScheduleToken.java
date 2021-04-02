@@ -59,7 +59,7 @@ public class ScheduleToken {
         this.runRepositoy = runRepositoy;
     }
 
-    @Scheduled(cron = "0 0 0 * * *")//chạy sau mỗi 0h 0p mỗi
+    @Scheduled(cron = "0 0 0/5 ? * *")//chạy sau mỗi 0h 0p mỗi
     public void updateToken() throws JsonProcessingException {
         List<Token> tokens = tokenRepository.findAll();
 
@@ -116,7 +116,7 @@ public class ScheduleToken {
                 run.setDistance(distance);
                 run.setMovingTime(movingTime);
                 run.setPace(avgPace);
-                run.setDate(AppUtil.convertToDateViaInstant(localDate));
+                run.setDate(localDate);
                 runRepositoy.save(run);
             }
         }

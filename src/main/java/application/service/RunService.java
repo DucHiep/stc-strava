@@ -42,38 +42,34 @@ public class RunService {
     }
 
     public List<Statistic> statistic(String fromDate, String toDate) {
-        Date from = null;
-        Date to = null;
+        LocalDate from = null;
+        LocalDate to = null;
 
-        try {
-             from = AppUtil.convertStringToDate(fromDate);
-             to = AppUtil.convertStringToDate(toDate);
-        } catch (ParseException e) {
-            e.getMessage();
-        }
+         from = LocalDate.parse(fromDate);
+         to = LocalDate.parse(toDate);
 
         List<Run> runs = runRepositoy.statistic(from, to);
         List<Statistic> statistics = new ArrayList<>();
 
 
         HashMap<Long, Statistic> map = new HashMap<>();
+        HashMap<Long, Integer> count = new HashMap<>();
+
         for (int i = 0; i < runs.size(); i++) {
             Long athleteId = runs.get(i).getAthleteId();
-            int count  = 0;
-            if (map.containsKey(athleteId)) {
-                count++;
+            if (map.containsKey(athleteId) && count.containsKey(athleteId)) {
                 Statistic statistic = map.get(athleteId);
                 statistic.setAthleteId(athleteId);
                 statistic.setDistance(runs.get(i).getDistance() + map.get(athleteId).getDistance());
-                LocalDate runLocalDate = AppUtil.convertToLocalDateViaInstant(runs.get(i).getDate());
-                LocalDate mapLocalDate = AppUtil.convertToLocalDateViaInstant(map.get(athleteId).getDate());
+                LocalDate runLocalDate = runs.get(i).getDate();
+                LocalDate mapLocalDate = map.get(athleteId).getDate();
                 if ((runLocalDate.getDayOfMonth() != mapLocalDate.getDayOfMonth()) || (runLocalDate.getMonthValue() != mapLocalDate.getMonthValue())) {
                     statistic.setRuns(map.get(athleteId).getRuns() + 1);
                 }
-                statistic.setAvgPace((runs.get(i).getPace() + map.get(athleteId).getAvgPace())/count);
+                statistic.setAvgPace((runs.get(i).getPace() + map.get(athleteId).getAvgPace()));
                 map.put(athleteId, statistic);
+                count.compute(athleteId, (k, v) -> v + 1);
             } else {
-                count ++;
                 Statistic statistic = new Statistic();
                 statistic.setAthleteId(athleteId);
                 statistic.setDistance(runs.get(i).getDistance());
@@ -81,14 +77,17 @@ public class RunService {
                 statistic.setRuns(1);
                 statistic.setAvgPace(runs.get(i).getPace());
                 map.put(athleteId, statistic);
+                count.put(athleteId, 1);
             }
         }
 
         for (Map.Entry<Long, Statistic> entry : map.entrySet())
         {
             Statistic statistic = entry.getValue();
-            User user = userRepository.findById(statistic.getAthleteId()).orElse(null);
+            int total = count.get(statistic.getAthleteId());
+            User user = userRepository.findByAthleteId(statistic.getAthleteId()).orElse(null);
             statistic.setUser(user);
+            statistic.setAvgPace(statistic.getAvgPace()/total);
             statistics.add(statistic);
         }
 
