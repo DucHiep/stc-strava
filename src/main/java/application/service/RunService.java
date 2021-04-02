@@ -74,6 +74,7 @@ public class RunService {
                 Statistic statistic = new Statistic();
                 statistic.setAthleteId(athleteId);
                 statistic.setDistance(runs.get(i).getDistance());
+                statistic.setDate(runs.get(i).getDate());
                 statistic.setRuns(1);
                 statistic.setAvgPace(runs.get(i).getPace());
                 map.put(athleteId, statistic);
