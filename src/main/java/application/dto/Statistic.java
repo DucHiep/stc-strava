@@ -48,7 +48,9 @@ public class Statistic {
     }
 
     public void setDistance(double distance) {
-        this.distance = distance;
+        double distances =Math.round(distance*10.0)/10.0;
+
+        this.distance = distances;
     }
 
     public double getAvgPace() {
