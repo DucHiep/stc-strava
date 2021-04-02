@@ -34,7 +34,13 @@ public class RunService {
         for (Run run: runs) {
             RunDto runDto = new RunDto();
             User user = userRepository.findById(run.getAthleteId()).orElse(null);
-            BeanUtils.copyProperties(run, runDto);
+            runDto.setAthleteId(run.getAthleteId());
+            runDto.setDate(run.getDate());
+            runDto.setDistance(run.getDistance());
+            double a = run.getPace();
+            double a1 = Math.round(a*100.0)/100.0;
+            runDto.setPace(a1);
+            runDto.setMovingTime(run.getMovingTime());
             runDto.setUser(user);
             runDtos.add(runDto);
         }
@@ -88,6 +94,7 @@ public class RunService {
             User user = userRepository.findByAthleteId(statistic.getAthleteId()).orElse(null);
             statistic.setUser(user);
             statistic.setAvgPace(statistic.getAvgPace()/total);
+
             statistics.add(statistic);
         }
 

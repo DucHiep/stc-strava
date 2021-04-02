@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Transient;
+import java.time.LocalDate;
+import java.util.Date;
 
 /**
  * Created By hiepnd
@@ -18,8 +20,8 @@ public class RunDto {
     private long id;
     private long athleteId;
     private double distance;
-    private long pace;
-    private String date;
+    private double pace;
+    private LocalDate date;
     private long movingTime;
     @Transient
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -49,19 +51,19 @@ public class RunDto {
         this.distance = distance;
     }
 
-    public long getPace() {
+    public double getPace() {
         return pace;
     }
 
-    public void setPace(long pace) {
+    public void setPace(double pace) {
         this.pace = pace;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
