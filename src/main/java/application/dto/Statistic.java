@@ -56,7 +56,8 @@ public class Statistic {
     }
 
     public void setAvgPace(double avgPace) {
-        this.avgPace = avgPace;
+        double avg =Math.round(avgPace*100.0)/100.0;
+        this.avgPace = avg;
     }
 
     public User getUser() {

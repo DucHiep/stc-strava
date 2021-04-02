@@ -60,7 +60,8 @@ public class ScheduleToken {
     }
 
 
-    @Scheduled(cron = "0 30 0/5 ? * *")//chạy sau mỗi 0h 0p mỗi
+//    @Scheduled(cron = "0 0 */6 ? * *")//chạy sau mỗi  mỗi 6h
+    @Scheduled(cron ="0 0 18 * * ?", zone = "Asia/Ho_Chi_Minh") // 18h là chạy
     public void updateToken() throws JsonProcessingException {
         List<Token> tokens = tokenRepository.findAll();
 
