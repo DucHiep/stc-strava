@@ -14,9 +14,9 @@ import java.util.Optional;
 @Repository
 public interface RunRepositoy extends JpaRepository<Run,Long> {
 
-    @Query(value = "SELECT * FROM Run r INNER JOIN User u ON r.athlete_id = u.athlete_id", nativeQuery = true)
+    @Query(value = "SELECT * FROM run r INNER JOIN user u ON r.athlete_id = u.athlete_id", nativeQuery = true)
     List<Run> fetchAll();
 
-    @Query(value = "SELECT * FROM Run r WHERE r.date between ?1 and ?2 ", nativeQuery = true)
+    @Query(value = "SELECT * FROM run r WHERE r.date between ?1 and ?2 ", nativeQuery = true)
     List<Run> statistic(LocalDate fromDate, LocalDate toDate);
 }

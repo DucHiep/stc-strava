@@ -50,7 +50,7 @@ public class AuthenticationListener implements ApplicationListener<ContextRefres
 
     @SneakyThrows
     @Override
-    public void onApplicationEvent(ContextRefreshedEvent event) {
+    public void onApplicationEvent(ContextRefreshedEvent event) throws RuntimeException {
 
         runRepositoy.deleteAll();
         userRepository.deleteAll();
@@ -62,6 +62,7 @@ public class AuthenticationListener implements ApplicationListener<ContextRefres
             String userUri = UriComponentsBuilder.newInstance().scheme("https").host("www.strava.com").path("api/v3/athlete")
                     .toUriString();
             ResponseEntity<String> userResponse = apiRequester.sendGetRequest(token.getAccess(), userUri);
+            if (userResponse == null) continue;
 
             String userBody = userResponse.getBody();
             userNode = objectMapper.readValue(userBody, new TypeReference<JsonNode>() {});
@@ -97,7 +98,10 @@ public class AuthenticationListener implements ApplicationListener<ContextRefres
                         (localDate.getDayOfMonth() == 30 && localDate.getMonthValue() == 3) ||
                         (localDate.getDayOfMonth() == 31 && localDate.getMonthValue() == 3)||
                         (localDate.getDayOfMonth() == 1 && localDate.getMonthValue() == 4) ||
-                        (localDate.getDayOfMonth() == 2 && localDate.getMonthValue() == 4)) {
+                        (localDate.getDayOfMonth() == 2 && localDate.getMonthValue() == 4) ||
+                        (localDate.getDayOfMonth() == 3 && localDate.getMonthValue() == 4) ||
+                        (localDate.getDayOfMonth() == 4 && localDate.getMonthValue() == 4) ||
+                        (localDate.getDayOfMonth() == 5 && localDate.getMonthValue() == 4)) {
                     if (distance >= 2000 && (avgPace >= 3.30  || avgPace <= 15.00 ) && type.equals("Run")) {
                         run.setAthleteId(token.getAthleteId());
                         run.setDistance(distance);
