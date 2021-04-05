@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Transient;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -48,9 +50,13 @@ public class Statistic {
     }
 
     public void setDistance(double distance) {
-        double distances =Math.round(distance*10.0)/10.0;
+//        BigDecimal decimalDistance = new BigDecimal(distance);
+//        decimalDistance = decimalDistance.divide(new BigDecimal(1000f));
+//        decimalDistance = decimalDistance.setScale(2, RoundingMode.CEILING);
+////        double distancess = distance/1000.0;
+        double distances =(Math.round((distance)*100.0)/100.0);
 
-        this.distance = distances;
+        this.distance =distances;
     }
 
     public double getAvgPace() {

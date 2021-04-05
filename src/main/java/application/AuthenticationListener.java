@@ -87,21 +87,14 @@ public class AuthenticationListener implements ApplicationListener<ContextRefres
                 double distance = node.get("distance").asDouble();
                 long movingTime = node.get("moving_time").asLong();
                 double avgPace =  (movingTime/60)/(distance/1000);
-                String date = node.get("start_date").asText();
+                String date = node.get("start_date_local").asText();
                 String type = node.get("type").asText();
 
                 String[] splitDate = date.split("T");
                 LocalDate localDate = LocalDate.parse(splitDate[0]);
 
 
-                if ((localDate.getDayOfMonth() == 29 && localDate.getMonthValue() == 3) ||
-                        (localDate.getDayOfMonth() == 30 && localDate.getMonthValue() == 3) ||
-                        (localDate.getDayOfMonth() == 31 && localDate.getMonthValue() == 3)||
-                        (localDate.getDayOfMonth() == 1 && localDate.getMonthValue() == 4) ||
-                        (localDate.getDayOfMonth() == 2 && localDate.getMonthValue() == 4) ||
-                        (localDate.getDayOfMonth() == 3 && localDate.getMonthValue() == 4) ||
-                        (localDate.getDayOfMonth() == 4 && localDate.getMonthValue() == 4) ||
-                        (localDate.getDayOfMonth() == 5 && localDate.getMonthValue() == 4)) {
+
                     if (distance >= 2000 && (avgPace >= 3.30  || avgPace <= 15.00 ) && type.equals("Run")) {
                         run.setAthleteId(token.getAthleteId());
                         run.setDistance(distance);
@@ -109,7 +102,7 @@ public class AuthenticationListener implements ApplicationListener<ContextRefres
                         run.setPace(avgPace);
                         run.setDate(localDate);
                         runRepositoy.save(run);
-                    }
+
                 }
             }
         }

@@ -74,7 +74,7 @@ public class ScheduleToken {
                     .queryParam("grant_type", "refresh_token")
                     .toUriString();
             ResponseEntity<String> response = apiRequester.sendGetRequestForRefreshToken(uri);
-
+            if (response == null) continue;
             String body = response.getBody();
 
             jsonNode = objectMapper.readValue(body, new TypeReference<JsonNode>() {});
@@ -95,7 +95,7 @@ public class ScheduleToken {
             String uri = UriComponentsBuilder.newInstance().scheme("https").host("www.strava.com").path("api/v3/activities")
                     .toUriString();
             ResponseEntity<String> response = apiRequester.sendGetRequestForRefreshToken(uri);
-
+            if (response == null) continue;
             String body = response.getBody();
 
             jsons = objectMapper.readValue(body, new TypeReference<List<JsonNode>>() {
@@ -106,7 +106,7 @@ public class ScheduleToken {
             double distance = node.get("distance").asDouble();
             long movingTime = node.get("moving_time").asLong();
             double avgPace = (movingTime / 60) / (distance / 1000);
-            String date = node.get("start_date").asText();
+            String date = node.get("start_date_local").asText();
             String type = node.get("type").asText();
 
             String[] splitDate = date.split("T");

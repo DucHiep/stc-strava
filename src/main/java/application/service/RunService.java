@@ -93,6 +93,7 @@ public class RunService {
             int total = count.get(statistic.getAthleteId());
             User user = userRepository.findByAthleteId(statistic.getAthleteId()).orElse(null);
             statistic.setUser(user);
+            statistic.setId(statistic.getId());
             statistic.setAvgPace(statistic.getAvgPace()/total);
 
             statistics.add(statistic);
