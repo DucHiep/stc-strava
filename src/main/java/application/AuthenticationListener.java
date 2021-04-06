@@ -65,8 +65,12 @@ public class AuthenticationListener implements ApplicationListener<ContextRefres
             if (userResponse == null) continue;
 
             String userBody = userResponse.getBody();
-            userNode = objectMapper.readValue(userBody, new TypeReference<JsonNode>() {});
-
+            try {
+                userNode = objectMapper.readValue(userBody, new TypeReference<JsonNode>() {
+                });
+            } catch (Exception ex) {
+                continue;
+            }
             User user = new User();
             String name = (userNode.get("lastname") + " " + userNode.get("firstname")).replace('\"',' ');
             user.setAthleteId(userNode.get("id").asLong());
@@ -80,8 +84,12 @@ public class AuthenticationListener implements ApplicationListener<ContextRefres
                     .toUriString();
             ResponseEntity<String> response = apiRequester.sendGetRequest(token.getAccess(), uri);
             String body = response.getBody();
-            jsons = objectMapper.readValue(body, new TypeReference<List<JsonNode>>() {});
-
+            try {
+                jsons = objectMapper.readValue(body, new TypeReference<List<JsonNode>>() {
+                });
+            }catch (Exception ex){
+                continue;
+            }
             for (JsonNode node : jsons) {
                 Run run = new Run();
                 double distance = node.get("distance").asDouble();
@@ -93,15 +101,13 @@ public class AuthenticationListener implements ApplicationListener<ContextRefres
                 String[] splitDate = date.split("T");
                 LocalDate localDate = LocalDate.parse(splitDate[0]);
 
-
-
-                    if (distance >= 2000 && (avgPace >= 3.30  || avgPace <= 15.00 ) && type.equals("Run")) {
-                        run.setAthleteId(token.getAthleteId());
-                        run.setDistance(distance);
-                        run.setMovingTime(movingTime);
-                        run.setPace(avgPace);
-                        run.setDate(localDate);
-                        runRepositoy.save(run);
+                if (distance >= 2000 && (avgPace >= 3.30  || avgPace <= 15.00 ) && type.equals("Run")) {
+                    run.setAthleteId(token.getAthleteId());
+                    run.setDistance(distance);
+                    run.setMovingTime(movingTime);
+                    run.setPace(avgPace);
+                    run.setDate(localDate);
+                    runRepositoy.save(run);
 
                 }
             }

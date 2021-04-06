@@ -60,9 +60,9 @@ public class ScheduleToken {
     }
 
 
-    @Scheduled(cron = "0 0 */6 ? * *")//chạy sau mỗi  mỗi 6h
-  //  @Scheduled(cron ="0 10 8 * * ?", zone = "Asia/Ho_Chi_Minh") // 18h là chạy
+    @Scheduled(cron ="0 35 8 * * *", zone = "Asia/Ho_Chi_Minh") // 18h là chạy
     public void updateToken() throws JsonProcessingException {
+        System.out.println("START UPDATE TOKEN," + System.currentTimeMillis());
         List<Token> tokens = tokenRepository.findAll();
 
         for (Token token : tokens) {
@@ -87,41 +87,43 @@ public class ScheduleToken {
 
     }
 
-    @Scheduled(cron = "0 0 0 * * *")//chạy sau mỗi 0h 0p mỗi
+    @Scheduled(cron = "0 30 13 * * *",zone = "Asia/Ho_Chi_Minh")//chạy sau mỗi 0h 0p mỗi
     public void activitySync() throws JsonProcessingException {
+        runRepositoy.deleteAll();
         List<Token> tokens = tokenRepository.findAll();
         for (Token token : tokens) {
             List<JsonNode> jsons;
-            String uri = UriComponentsBuilder.newInstance().scheme("https").host("www.strava.com").path("api/v3/activities")
+            String uri = UriComponentsBuilder.newInstance().scheme("https").host("www.strava.com").path("/api/v3/athlete/activities")
                     .toUriString();
-            ResponseEntity<String> response = apiRequester.sendGetRequestForRefreshToken(uri);
-            if (response == null) continue;
+            ResponseEntity<String> response = apiRequester.sendGetRequest(token.getAccess(), uri);
             String body = response.getBody();
+            try {
+                jsons = objectMapper.readValue(body, new TypeReference<List<JsonNode>>() {
+                });
+            }catch (Exception ex){
+                continue;
+            }
+            for (JsonNode node : jsons) {
+                Run run = new Run();
+                double distance = node.get("distance").asDouble();
+                long movingTime = node.get("moving_time").asLong();
+                double avgPace =  (movingTime/60)/(distance/1000);
+                String date = node.get("start_date_local").asText();
+                String type = node.get("type").asText();
 
-            jsons = objectMapper.readValue(body, new TypeReference<List<JsonNode>>() {
-            });
+                String[] splitDate = date.split("T");
+                LocalDate localDate = LocalDate.parse(splitDate[0]);
 
-            JsonNode node = jsons.get(0);
+                if (distance >= 2000 && (avgPace >= 3.30  || avgPace <= 15.00 ) && type.equals("Run")) {
+                    run.setAthleteId(token.getAthleteId());
+                    run.setDistance(distance);
+                    run.setMovingTime(movingTime);
+                    run.setPace(avgPace);
+                    run.setDate(localDate);
+                    runRepositoy.save(run);
 
-            double distance = node.get("distance").asDouble();
-            long movingTime = node.get("moving_time").asLong();
-            double avgPace = (movingTime / 60) / (distance / 1000);
-            String date = node.get("start_date_local").asText();
-            String type = node.get("type").asText();
-
-            String[] splitDate = date.split("T");
-            LocalDate localDate = LocalDate.parse(splitDate[0]);
-
-            Run run = new Run();
-            if (type.equals("Run")) {
-                run.setAthleteId(token.getAthleteId());
-                run.setDistance(distance);
-                run.setMovingTime(movingTime);
-                run.setPace(avgPace);
-                run.setDate(localDate);
-                runRepositoy.save(run);
+                }
             }
         }
-
     }
 }
