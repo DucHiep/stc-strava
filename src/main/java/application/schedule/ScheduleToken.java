@@ -60,7 +60,7 @@ public class ScheduleToken {
     }
 
 
-    @Scheduled(cron ="0 30 23 * * *", zone = "Asia/Ho_Chi_Minh") // 18h là chạy
+    @Scheduled(cron ="0 36 23 * * *", zone = "Asia/Ho_Chi_Minh") // 18h là chạy
     public void updateToken() throws JsonProcessingException {
         System.out.println("START UPDATE TOKEN," + System.currentTimeMillis());
         List<Token> tokens = tokenRepository.findAll();
@@ -87,9 +87,8 @@ public class ScheduleToken {
 
     }
 
-    @Scheduled(cron = "0 0 0 * * *",zone = "Asia/Ho_Chi_Minh")//chạy sau mỗi 0h 0p mỗi
+    @Scheduled(cron = "0 36 17 * * *",zone = "Asia/Ho_Chi_Minh")//chạy sau mỗi 0h 0p mỗi
     public void activitySync() throws JsonProcessingException {
-        runRepositoy.deleteAll();
         List<Token> tokens = tokenRepository.findAll();
         for (Token token : tokens) {
             List<JsonNode> jsons;
@@ -113,16 +112,20 @@ public class ScheduleToken {
 
                 String[] splitDate = date.split("T");
                 LocalDate localDate = LocalDate.parse(splitDate[0]);
-
-                if (distance >= 2000 && (avgPace >= 3.30  || avgPace <= 15.00 ) && type.equals("Run")) {
+                String date1 = "2021-03-28";
+                LocalDate dateFormat = LocalDate.parse(date1);
+                if ((localDate.isAfter(dateFormat)) && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run"))) {
                     run.setAthleteId(token.getAthleteId());
                     run.setDistance(distance);
                     run.setMovingTime(movingTime);
                     run.setPace(avgPace);
                     run.setDate(localDate);
-                    runRepositoy.save(run);
-
+                    List<Run> paceDB = runRepositoy.findAllByPace(run.getPace());
+                    if(paceDB.size()==0){
+                        runRepositoy.save(run);
+                    }
                 }
+
             }
         }
     }

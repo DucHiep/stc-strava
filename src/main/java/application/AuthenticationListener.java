@@ -7,7 +7,6 @@ import application.repository.RunRepositoy;
 import application.repository.TokenRepository;
 import application.repository.UserRepository;
 import application.utility.ApiRequester;
-import application.utility.AppUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
@@ -19,9 +18,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 import com.fasterxml.jackson.core.type.TypeReference;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 
 
@@ -52,7 +50,6 @@ public class AuthenticationListener implements ApplicationListener<ContextRefres
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) throws RuntimeException {
 
-        runRepositoy.deleteAll();
         userRepository.deleteAll();
 
         List<Token> tokens = tokenRepository.findAll();
@@ -100,19 +97,22 @@ public class AuthenticationListener implements ApplicationListener<ContextRefres
 
                 String[] splitDate = date.split("T");
                 LocalDate localDate = LocalDate.parse(splitDate[0]);
-
-                if (distance >= 2000 && (avgPace >= 3.30  || avgPace <= 15.00 ) && type.equals("Run")) {
+                String date1 = "2021-03-28";
+                LocalDate dateFormat = LocalDate.parse(date1);
+                if ((localDate.isAfter(dateFormat)) && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run"))) {
                     run.setAthleteId(token.getAthleteId());
                     run.setDistance(distance);
                     run.setMovingTime(movingTime);
                     run.setPace(avgPace);
                     run.setDate(localDate);
-                    runRepositoy.save(run);
-
+                    List<Run> paceDB = runRepositoy.findAllByPace(run.getPace());
+                    if(paceDB.size()==0){
+                        runRepositoy.save(run);
+                    }
                 }
+
             }
         }
-
     }
 }
 
