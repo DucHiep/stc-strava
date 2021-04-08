@@ -110,7 +110,6 @@ public class AuthenticationListener implements ApplicationListener<ContextRefres
                         runRepositoy.save(run);
                     }
                 }
-
             }
         }
     }
