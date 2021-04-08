@@ -105,7 +105,7 @@ public class AuthenticationListener implements ApplicationListener<ContextRefres
                     run.setMovingTime(movingTime);
                     run.setPace(avgPace);
                     run.setDate(localDate);
-                    List<Run> paceDB = runRepositoy.findAllByPace(run.getPace());
+                    List<Run> paceDB = runRepositoy.findAllByPaceAndDate(run.getPace(), run.getDate() );
                     if(paceDB.size()==0){
                         runRepositoy.save(run);
                     }
