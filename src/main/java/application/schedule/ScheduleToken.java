@@ -60,7 +60,7 @@ public class ScheduleToken {
     }
 
 
-    @Scheduled(cron ="0 0 8 * * *", zone = "Asia/Ho_Chi_Minh") // 18h là chạy
+    @Scheduled(cron ="0 30 23 * * *", zone = "Asia/Ho_Chi_Minh") // 18h là chạy
     public void updateToken() throws JsonProcessingException {
         System.out.println("START UPDATE TOKEN," + System.currentTimeMillis());
         List<Token> tokens = tokenRepository.findAll();
@@ -87,7 +87,7 @@ public class ScheduleToken {
 
     }
 
-    @Scheduled(cron = "0 2 8 * * *",zone = "Asia/Ho_Chi_Minh")//chạy sau mỗi 0h 0p mỗi
+    @Scheduled(cron = "0 0 0 * * *",zone = "Asia/Ho_Chi_Minh")//chạy sau mỗi 0h 0p mỗi
     public void activitySync() throws JsonProcessingException {
         List<Token> tokens = tokenRepository.findAll();
         for (Token token : tokens) {
