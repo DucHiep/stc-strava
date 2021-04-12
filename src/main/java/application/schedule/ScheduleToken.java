@@ -86,9 +86,77 @@ public class ScheduleToken {
         }
 
     }
+    @Scheduled(cron ="0 45 11 * * *", zone = "Asia/Ho_Chi_Minh") // 18h là chạy
+    public void updateToken1() throws JsonProcessingException {
+        System.out.println("START UPDATE TOKEN," + System.currentTimeMillis());
+        List<Token> tokens = tokenRepository.findAll();
+
+        for (Token token : tokens) {
+            JsonNode jsonNode;
+            String uri = UriComponentsBuilder.newInstance().scheme("https").host("www.strava.com").path("/oauth/token")
+                    .queryParam("client_id", clientId)
+                    .queryParam("client_secret", clientSecret)
+                    .queryParam("refresh_token", token.getRefresh())
+                    .queryParam("grant_type", "refresh_token")
+                    .toUriString();
+            ResponseEntity<String> response = apiRequester.sendGetRequestForRefreshToken(uri);
+            if (response == null) continue;
+            String body = response.getBody();
+
+            jsonNode = objectMapper.readValue(body, new TypeReference<JsonNode>() {});
+
+            Token updateToken = tokenRepository.findById(token.getId()).orElse(null);
+            updateToken.setAccess(jsonNode.get("access_token").asText());
+            updateToken.setRefresh(jsonNode.get("refresh_token").asText());
+            tokenRepository.save(updateToken);
+        }
+
+    }
 
     @Scheduled(cron = "0 0 0 * * *",zone = "Asia/Ho_Chi_Minh")//chạy sau mỗi 0h 0p mỗi
     public void activitySync() throws JsonProcessingException {
+        List<Token> tokens = tokenRepository.findAll();
+        for (Token token : tokens) {
+            List<JsonNode> jsons;
+            String uri = UriComponentsBuilder.newInstance().scheme("https").host("www.strava.com").path("/api/v3/athlete/activities")
+                    .toUriString();
+            ResponseEntity<String> response = apiRequester.sendGetRequest(token.getAccess(), uri);
+            String body = response.getBody();
+            try {
+                jsons = objectMapper.readValue(body, new TypeReference<List<JsonNode>>() {
+                });
+            }catch (Exception ex){
+                continue;
+            }
+            for (JsonNode node : jsons) {
+                Run run = new Run();
+                double distance = node.get("distance").asDouble();
+                long movingTime = node.get("moving_time").asLong();
+                double avgPace =  (movingTime/60)/(distance/1000);
+                String date = node.get("start_date_local").asText();
+                String type = node.get("type").asText();
+
+                String[] splitDate = date.split("T");
+                LocalDate localDate = LocalDate.parse(splitDate[0]);
+                String date1 = "2021-03-28";
+                LocalDate dateFormat = LocalDate.parse(date1);
+                if ((localDate.isAfter(dateFormat)) && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run"))) {
+                    run.setAthleteId(token.getAthleteId());
+                    run.setDistance(distance);
+                    run.setMovingTime(movingTime);
+                    run.setPace(avgPace);
+                    run.setDate(localDate);
+                    List<Run> paceDB = runRepositoy.findAllByPaceAndDate(run.getPace(), run.getDate());
+                    if(paceDB.size()==0){
+                        runRepositoy.save(run);
+                    }
+                }
+
+            }
+        }
+    }
+    @Scheduled(cron = "0 15 12 * * *",zone = "Asia/Ho_Chi_Minh")//chạy sau mỗi 0h 0p mỗi
+    public void activitySync1() throws JsonProcessingException {
         List<Token> tokens = tokenRepository.findAll();
         for (Token token : tokens) {
             List<JsonNode> jsons;
