@@ -60,12 +60,12 @@ public class RunService {
 
         HashMap<Long, Statistic> map = new HashMap<>();
         HashMap<Long, Integer> count = new HashMap<>();
-        HashMap<Integer, LocalDate> localDate = new HashMap<>();
+        HashMap<Long, LocalDate> localDate = new HashMap<>();
 
         for (int i = 0; i < runs.size(); i++) {
             Long athleteId = runs.get(i).getAthleteId();
             LocalDate dateInRecord = runs.get(i).getDate();
-            if (localDate.get(1) != null && dateInRecord.isEqual(localDate.get(1))) {
+            if (localDate.get(athleteId) != null && dateInRecord.isEqual(localDate.get(athleteId))) {
                 continue;
             }
             if (map.containsKey(athleteId) && count.containsKey(athleteId)) {
@@ -80,7 +80,7 @@ public class RunService {
                 statistic.setAvgPace((runs.get(i).getPace() + map.get(athleteId).getAvgPace()));
                 map.put(athleteId, statistic);
                 count.compute(athleteId, (k, v) -> v + 1);
-                localDate.replace( 1, dateInRecord);
+                localDate.replace(athleteId, dateInRecord);
             } else {
                 Statistic statistic = new Statistic();
                 statistic.setAthleteId(athleteId);
@@ -90,7 +90,7 @@ public class RunService {
                 statistic.setAvgPace(runs.get(i).getPace());
                 map.put(athleteId, statistic);
                 count.put(athleteId, 1);
-                localDate.put(1, dateInRecord);
+                localDate.put(athleteId, dateInRecord);
             }
         }
 
