@@ -98,8 +98,10 @@ public class AuthenticationListener implements ApplicationListener<ContextRefres
                 String[] splitDate = date.split("T");
                 LocalDate localDate = LocalDate.parse(splitDate[0]);
                 String date1 = "2021-03-28";
+		String dateStop = "2021-05-25";
+		LocalDate dateStopFormat = LocalDate.parse(dateStop);
                 LocalDate dateFormat = LocalDate.parse(date1);
-                if ((localDate.isAfter(dateFormat)) && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run"))) {
+                if ((localDate.isAfter(dateFormat)) && (localDate.isBefore(dateStopFormat)) && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run"))) {
                     run.setAthleteId(token.getAthleteId());
                     run.setDistance(distance);
                     run.setMovingTime(movingTime);
