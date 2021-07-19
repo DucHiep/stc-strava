@@ -144,9 +144,11 @@ public class ScheduleToken {
                 LocalDate dateFormat = LocalDate.parse(date1);
 
                 String dateContinue = "2021-07-04";
+                String dateStopContinue = "2021-07-09";
                 LocalDate dateContinueFormat = LocalDate.parse(dateContinue);
+                LocalDate dateStopContinueFormat = LocalDate.parse(dateStopContinue);
                 if (((localDate.isAfter(dateFormat)) && (localDate.isBefore(dateStopFormat)) && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run")))
-                        || ((localDate.isAfter(dateContinueFormat)) && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run")))) {
+                        || ((localDate.isAfter(dateContinueFormat)) && (localDate.isBefore(dateStopContinueFormat)) && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run")))) {
                     run.setAthleteId(token.getAthleteId());
                     run.setDistance(distance);
                     run.setMovingTime(movingTime);
@@ -187,14 +189,22 @@ public class ScheduleToken {
                 String[] splitDate = date.split("T");
                 LocalDate localDate = LocalDate.parse(splitDate[0]);
                 String date1 = "2021-03-28";
+                String dateStop = "2021-05-25";
+                LocalDate dateStopFormat = LocalDate.parse(dateStop);
                 LocalDate dateFormat = LocalDate.parse(date1);
-                if ((localDate.isAfter(dateFormat)) && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run"))) {
+
+                String dateContinue = "2021-07-04";
+                String dateStopContinue = "2021-07-09";
+                LocalDate dateContinueFormat = LocalDate.parse(dateContinue);
+                LocalDate dateStopContinueFormat = LocalDate.parse(dateStopContinue);
+                if (((localDate.isAfter(dateFormat)) && (localDate.isBefore(dateStopFormat)) && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run")))
+                        || ((localDate.isAfter(dateContinueFormat)) && (localDate.isBefore(dateStopContinueFormat)) && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run")))) {
                     run.setAthleteId(token.getAthleteId());
                     run.setDistance(distance);
                     run.setMovingTime(movingTime);
                     run.setPace(avgPace);
                     run.setDate(localDate);
-                    List<Run> paceDB = runRepositoy.findAllByPaceAndDate(run.getPace(), run.getDate());
+                    List<Run> paceDB = runRepositoy.findAllByPaceAndDate(run.getPace(), run.getDate() );
                     if(paceDB.size()==0){
                         runRepositoy.save(run);
                     }
