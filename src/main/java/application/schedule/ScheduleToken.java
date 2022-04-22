@@ -147,8 +147,12 @@ public class ScheduleToken {
                 String dateStopContinue = "2021-07-09";
                 LocalDate dateContinueFormat = LocalDate.parse(dateContinue);
                 LocalDate dateStopContinueFormat = LocalDate.parse(dateStopContinue);
+
+                String dateCovidContinue = "2022-04-22";
+                LocalDate dateCovidContinueFormat = LocalDate.parse(dateCovidContinue);
                 if (((localDate.isAfter(dateFormat)) && (localDate.isBefore(dateStopFormat)) && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run")))
-                        || ((localDate.isAfter(dateContinueFormat)) && (localDate.isBefore(dateStopContinueFormat)) && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run")))) {
+                        || ((localDate.isAfter(dateContinueFormat)) && (localDate.isBefore(dateStopContinueFormat)) && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run")))
+                        || ((localDate.isAfter(dateCovidContinueFormat)) && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run")))) {
                     run.setAthleteId(token.getAthleteId());
                     run.setDistance(distance);
                     run.setMovingTime(movingTime);
@@ -197,8 +201,12 @@ public class ScheduleToken {
                 String dateStopContinue = "2021-07-09";
                 LocalDate dateContinueFormat = LocalDate.parse(dateContinue);
                 LocalDate dateStopContinueFormat = LocalDate.parse(dateStopContinue);
+
+                String dateCovidContinue = "2022-04-22";
+                LocalDate dateCovidContinueFormat = LocalDate.parse(dateCovidContinue);
                 if (((localDate.isAfter(dateFormat)) && (localDate.isBefore(dateStopFormat)) && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run")))
-                        || ((localDate.isAfter(dateContinueFormat)) && (localDate.isBefore(dateStopContinueFormat)) && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run")))) {
+                        || ((localDate.isAfter(dateContinueFormat)) && (localDate.isBefore(dateStopContinueFormat)) && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run")))
+                        || ((localDate.isAfter(dateCovidContinueFormat)) && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run")))) {
                     run.setAthleteId(token.getAthleteId());
                     run.setDistance(distance);
                     run.setMovingTime(movingTime);
