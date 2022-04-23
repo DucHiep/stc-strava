@@ -138,21 +138,24 @@ public class ScheduleToken {
 
                 String[] splitDate = date.split("T");
                 LocalDate localDate = LocalDate.parse(splitDate[0]);
-                String date1 = "2021-03-28";
-                String dateStop = "2021-05-25";
-                LocalDate dateStopFormat = LocalDate.parse(dateStop);
-                LocalDate dateFormat = LocalDate.parse(date1);
+                String dateStartVerTwo = "2022-04-22";
+                LocalDate dateStartVerTwoFormat = LocalDate.parse(dateStartVerTwo);
+//                String dateStop = "2021-05-25";
+//                LocalDate dateFormat = LocalDate.parse(date1);
+//
+//                String dateContinue = "2021-07-04";
+//                String dateStopContinue = "2021-07-09";
+//                LocalDate dateContinueFormat = LocalDate.parse(dateContinue);
+//                LocalDate dateStopContinueFormat = LocalDate.parse(dateStopContinue);
 
-                String dateContinue = "2021-07-04";
-                String dateStopContinue = "2021-07-09";
-                LocalDate dateContinueFormat = LocalDate.parse(dateContinue);
-                LocalDate dateStopContinueFormat = LocalDate.parse(dateStopContinue);
-
-                String dateCovidContinue = "2022-04-22";
-                LocalDate dateCovidContinueFormat = LocalDate.parse(dateCovidContinue);
-                if (((localDate.isAfter(dateFormat)) && (localDate.isBefore(dateStopFormat)) && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run")))
-                        || ((localDate.isAfter(dateContinueFormat)) && (localDate.isBefore(dateStopContinueFormat)) && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run")))
-                        || ((localDate.isAfter(dateCovidContinueFormat)) && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run")))) {
+//                String dateCovidContinue = "2022-04-22";
+//                LocalDate dateCovidContinueFormat = LocalDate.parse(dateCovidContinue);
+                if (((localDate.isAfter(dateStartVerTwoFormat))
+//                        && (localDate.isBefore(dateStopFormat))
+                        && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run")))
+//                        || ((localDate.isAfter(dateContinueFormat)) && (localDate.isBefore(dateStopContinueFormat)) && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run")))
+//                        || ((localDate.isAfter(dateCovidContinueFormat)) && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run")))
+                ) {
                     run.setAthleteId(token.getAthleteId());
                     run.setDistance(distance);
                     run.setMovingTime(movingTime);
@@ -192,21 +195,24 @@ public class ScheduleToken {
 
                 String[] splitDate = date.split("T");
                 LocalDate localDate = LocalDate.parse(splitDate[0]);
-                String date1 = "2021-03-28";
-                String dateStop = "2021-05-25";
-                LocalDate dateStopFormat = LocalDate.parse(dateStop);
-                LocalDate dateFormat = LocalDate.parse(date1);
-
-                String dateContinue = "2021-07-04";
-                String dateStopContinue = "2021-07-09";
-                LocalDate dateContinueFormat = LocalDate.parse(dateContinue);
-                LocalDate dateStopContinueFormat = LocalDate.parse(dateStopContinue);
-
-                String dateCovidContinue = "2022-04-22";
-                LocalDate dateCovidContinueFormat = LocalDate.parse(dateCovidContinue);
-                if (((localDate.isAfter(dateFormat)) && (localDate.isBefore(dateStopFormat)) && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run")))
-                        || ((localDate.isAfter(dateContinueFormat)) && (localDate.isBefore(dateStopContinueFormat)) && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run")))
-                        || ((localDate.isAfter(dateCovidContinueFormat)) && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run")))) {
+                String dateStartVerTwo = "2022-04-22";
+                LocalDate dateStartVerTwoFormat = LocalDate.parse(dateStartVerTwo);
+//                String dateStop = "2021-05-25";
+//                LocalDate dateStopFormat = LocalDate.parse(dateStop);
+//
+//                String dateContinue = "2021-07-04";
+//                String dateStopContinue = "2021-07-09";
+//                LocalDate dateContinueFormat = LocalDate.parse(dateContinue);
+//                LocalDate dateStopContinueFormat = LocalDate.parse(dateStopContinue);
+//
+//                String dateCovidContinue = "2022-04-22";
+//                LocalDate dateCovidContinueFormat = LocalDate.parse(dateCovidContinue);
+                if (((localDate.isAfter(dateStartVerTwoFormat))
+//                        && (localDate.isBefore(dateStopFormat))
+                        && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run")))
+//                        || ((localDate.isAfter(dateContinueFormat)) && (localDate.isBefore(dateStopContinueFormat)) && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run")))
+//                        || ((localDate.isAfter(dateCovidContinueFormat)) && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run")))
+                ) {
                     run.setAthleteId(token.getAthleteId());
                     run.setDistance(distance);
                     run.setMovingTime(movingTime);
