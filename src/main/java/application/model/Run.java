@@ -15,6 +15,7 @@ public class Run {
     private double pace;
     private LocalDate date;
     private long movingTime;
+    private double totalPoint;
 
     public long getId() {
         return id;
@@ -62,5 +63,13 @@ public class Run {
 
     public void setAthleteId(long athleteId) {
         this.athleteId = athleteId;
+    }
+
+    public void setTotalPoint(double totalPoint) {
+        this.totalPoint = totalPoint;
+    }
+
+    public double getTotalPoint() {
+        return totalPoint;
     }
 }

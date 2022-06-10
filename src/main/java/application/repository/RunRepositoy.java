@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Repository
 public interface RunRepositoy extends JpaRepository<Run,Long> {
-    List<Run> findAllByPaceAndDate(double pace, LocalDate date);
+    List<Run> findAllByPaceAndDateAndTotalPoint(double pace, LocalDate date, double totalPoint);
     @Query(value = "SELECT * FROM run r INNER JOIN user u ON r.athlete_id = u.athlete_id", nativeQuery = true)
     List<Run> fetchAll();
 

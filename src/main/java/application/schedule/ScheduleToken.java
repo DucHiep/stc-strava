@@ -14,6 +14,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
@@ -35,11 +36,24 @@ import java.util.List;
 @EnableScheduling
 public class ScheduleToken {
 
+
     @Value("${security.oauth2.client.client-id}")
     private String clientId;
 
     @Value("${security.oauth2.client.client-secret}")
     private String clientSecret;
+
+    @Value("${distanceConfig}")
+    private double distanceconfig;
+
+    @Value("${minAvgPaceConfig}")
+    private double minAvgPaceconfig;
+
+    @Value("${maxAvgPaceConfig}")
+    private double maxAvgPaceconfig;
+
+    @Value("${dateStartconfig}")
+    private String dateStartconfig;
 
     private final TokenRepository tokenRepository;
     private final ApiRequester apiRequester;
@@ -115,6 +129,7 @@ public class ScheduleToken {
 
     @Scheduled(cron = "0 0 0 * * *",zone = "Asia/Ho_Chi_Minh")//chạy sau mỗi 0h 0p mỗi
     public void activitySync() throws JsonProcessingException {
+
         List<Token> tokens = tokenRepository.findAll();
         for (Token token : tokens) {
             List<JsonNode> jsons;
@@ -128,6 +143,7 @@ public class ScheduleToken {
             }catch (Exception ex){
                 continue;
             }
+
             for (JsonNode node : jsons) {
                 Run run = new Run();
                 double distance = node.get("distance").asDouble();
@@ -135,13 +151,23 @@ public class ScheduleToken {
                 double avgPace =  (movingTime/60)/(distance/1000);
                 String date = node.get("start_date_local").asText();
                 String type = node.get("type").asText();
+                double point = 0;
+                if(avgPace>=3 && avgPace<6.5){
+                    point = (avgPace*0.2*3) + (distance/1000)*0.3 + 0.5;
+                }
+                if(avgPace>=6.5 && avgPace<9){
+                    point = (avgPace*0.2*2) + (distance/1000)*0.3 + 0.5;
+                }
+                if(avgPace>=9 && avgPace<=15){
+                    point = (avgPace*0.2*1) + (distance/1000)*0.3 + 0.5;
+                }
 
                 String[] splitDate = date.split("T");
                 LocalDate localDate = LocalDate.parse(splitDate[0]);
-                String dateStartVerTwo = "2022-04-22";
-                LocalDate dateStartVerTwoFormat = LocalDate.parse(dateStartVerTwo);
+          //      String dateStartVerTwo = "2022-04-22";
+                LocalDate dateStartVerTwoFormat = LocalDate.parse(dateStartconfig);
 //                String dateStop = "2021-05-25";
-//                LocalDate dateFormat = LocalDate.parse(date1);
+//                LocalDate dateFormat = LocalDate.parse(dateStop);
 //
 //                String dateContinue = "2021-07-04";
 //                String dateStopContinue = "2021-07-09";
@@ -152,16 +178,18 @@ public class ScheduleToken {
 //                LocalDate dateCovidContinueFormat = LocalDate.parse(dateCovidContinue);
                 if (((localDate.isAfter(dateStartVerTwoFormat))
 //                        && (localDate.isBefore(dateStopFormat))
-                        && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run")))
+                        && (distance >= distanceconfig) && (avgPace >= minAvgPaceconfig  || avgPace <= maxAvgPaceconfig ) && (type.equals("Run")))
 //                        || ((localDate.isAfter(dateContinueFormat)) && (localDate.isBefore(dateStopContinueFormat)) && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run")))
 //                        || ((localDate.isAfter(dateCovidContinueFormat)) && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run")))
                 ) {
+
                     run.setAthleteId(token.getAthleteId());
                     run.setDistance(distance);
                     run.setMovingTime(movingTime);
                     run.setPace(avgPace);
                     run.setDate(localDate);
-                    List<Run> paceDB = runRepositoy.findAllByPaceAndDate(run.getPace(), run.getDate() );
+                    run.setTotalPoint(point);
+                    List<Run> paceDB = runRepositoy.findAllByPaceAndDateAndTotalPoint(run.getPace(), run.getDate(), run.getTotalPoint());
                     if(paceDB.size()==0){
                         runRepositoy.save(run);
                     }
@@ -192,11 +220,20 @@ public class ScheduleToken {
                 double avgPace =  (movingTime/60)/(distance/1000);
                 String date = node.get("start_date_local").asText();
                 String type = node.get("type").asText();
-
+                double point =0;
+                if(avgPace>=3 && avgPace<6.5){
+                    point = (avgPace*0.2*3) + (distance/1000)*0.3 + 0.5;
+                }
+                if(avgPace>=6.5 && avgPace<9){
+                    point = (avgPace*0.2*2) + (distance/1000)*0.3 + 0.5;
+                }
+                if(avgPace>=9 && avgPace<=15){
+                    point = (avgPace*0.2*1) + (distance/1000)*0.3 + 0.5;
+                }
                 String[] splitDate = date.split("T");
                 LocalDate localDate = LocalDate.parse(splitDate[0]);
-                String dateStartVerTwo = "2022-04-22";
-                LocalDate dateStartVerTwoFormat = LocalDate.parse(dateStartVerTwo);
+ //               String dateStartVerTwo = "2022-04-22";
+                LocalDate dateStartVerTwoFormat = LocalDate.parse(dateStartconfig);
 //                String dateStop = "2021-05-25";
 //                LocalDate dateStopFormat = LocalDate.parse(dateStop);
 //
@@ -209,16 +246,18 @@ public class ScheduleToken {
 //                LocalDate dateCovidContinueFormat = LocalDate.parse(dateCovidContinue);
                 if (((localDate.isAfter(dateStartVerTwoFormat))
 //                        && (localDate.isBefore(dateStopFormat))
-                        && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run")))
+                        && (distance >= distanceconfig) && (avgPace >= minAvgPaceconfig  || avgPace <= maxAvgPaceconfig ) && (type.equals("Run")))
 //                        || ((localDate.isAfter(dateContinueFormat)) && (localDate.isBefore(dateStopContinueFormat)) && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run")))
 //                        || ((localDate.isAfter(dateCovidContinueFormat)) && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run")))
                 ) {
+
                     run.setAthleteId(token.getAthleteId());
                     run.setDistance(distance);
                     run.setMovingTime(movingTime);
                     run.setPace(avgPace);
                     run.setDate(localDate);
-                    List<Run> paceDB = runRepositoy.findAllByPaceAndDate(run.getPace(), run.getDate() );
+                    run.setTotalPoint(point);
+                    List<Run> paceDB = runRepositoy.findAllByPaceAndDateAndTotalPoint(run.getPace(), run.getDate(), run.getTotalPoint());
                     if(paceDB.size()==0){
                         runRepositoy.save(run);
                     }
