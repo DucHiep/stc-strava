@@ -163,7 +163,7 @@ public class AuthenticationListener implements ApplicationListener<ContextRefres
 //                LocalDate dateCovidContinueFormat = LocalDate.parse(dateCovidContinue);
                 if (((localDate.isAfter(dateStartVerTwoFormat))
 //                        && (localDate.isBefore(dateStopFormat))
-                        && (distance >= distanceconfig) && (avgPace >= minAvgPaceconfig  && avgPace <= maxAvgPaceconfig ) && (type.equals("Run")))
+                        && (distance >= distanceconfig) && (avgPace >= minAvgPaceconfig  || avgPace <= maxAvgPaceconfig ) && (type.equals("Run")))
 //                        || ((localDate.isAfter(dateContinueFormat)) && (localDate.isBefore(dateStopContinueFormat)) && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run")))
 //                        || ((localDate.isAfter(dateCovidContinueFormat)) && (distance >= 2000) && (avgPace >= 3.30  || avgPace <= 15.00 ) && (type.equals("Run")))
                 ) {
