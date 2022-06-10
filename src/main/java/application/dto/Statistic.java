@@ -25,6 +25,7 @@ public class Statistic {
     private double avgPace;
     private long runs;
     private LocalDate date;
+    private double totalPoint;
     @Transient
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private User user;
@@ -90,5 +91,15 @@ public class Statistic {
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public double setTotalPoint(double totalPoint){
+        double Tpoint =Math.round(totalPoint*100.0)/100.0;
+        this.totalPoint = Tpoint;
+        return Tpoint;
+
+    }
+    public double getTotalPoint(){
+        return totalPoint;
     }
 }
