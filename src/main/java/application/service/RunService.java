@@ -7,14 +7,10 @@ import application.model.Run;
 import application.model.User;
 import application.repository.RunRepositoy;
 import application.repository.UserRepository;
-import application.utility.AppUtil;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -26,6 +22,8 @@ public class RunService {
 
     @Autowired
     private UserRepository userRepository;
+
+
 
     public List<RunDto> findRunAll() {
         List<Run> runs = runRepositoy.fetchAll();
