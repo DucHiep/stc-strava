@@ -136,13 +136,13 @@ public class AuthenticationListener implements ApplicationListener<ContextRefres
                 String type = node.get("type").asText();
                 double point =0 ;
                 if(avgPace>=3 && avgPace<6.5){
-                    point = (avgPace*0.2*3) + (distance/1000)*0.3 + 0.5;
+                    point = (0.2*3) + (distance/1000)*0.3 + 0.5;
                 }
                 if(avgPace>=6.5 && avgPace<9){
-                    point = (avgPace*0.2*2) + (distance/1000)*0.3 + 0.5;
+                    point = (0.2*2) + (distance/1000)*0.3 + 0.5;
                 }
                 if(avgPace>=9 && avgPace<=15){
-                    point = (avgPace*0.2*1) + (distance/1000)*0.3 + 0.5;
+                    point = (0.2*1) + (distance/1000)*0.3 + 0.5;
                 }
 
 
