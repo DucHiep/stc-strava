@@ -93,11 +93,9 @@ public class Statistic {
         this.date = date;
     }
 
-    public double setTotalPoint(double totalPoint){
-        double Tpoint =Math.round(totalPoint*100.0)/100.0;
-        this.totalPoint = Tpoint;
-        return Tpoint;
-
+    public void setTotalPoint(double totalPoint){
+        double tpoints =Math.round((totalPoint)*100.0)/100.0;
+        this.totalPoint = tpoints;
     }
     public double getTotalPoint(){
         return totalPoint;

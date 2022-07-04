@@ -178,13 +178,13 @@ public class ScheduleToken {
                 String date = node.get("start_date_local").asText();
                 String type = node.get("type").asText();
                 double point = 0;
-                if(avgPace>=3 && avgPace<6.5){
+                if(avgPace>=3 && avgPace<=6.5){
                     point = (0.2*3) + (distance/1000)*0.3 + 0.5;
                 }
-                if(avgPace>=6.5 && avgPace<9){
+                if(avgPace>6.5 && avgPace<=9){
                     point = (0.2*2) + (distance/1000)*0.3 + 0.5;
                 }
-                if(avgPace>=9 && avgPace<=15){
+                if(avgPace>9 && avgPace<=15){
                     point = (0.2*1) + (distance/1000)*0.3 + 0.5;
                 }
 
@@ -247,13 +247,13 @@ public class ScheduleToken {
                 String date = node.get("start_date_local").asText();
                 String type = node.get("type").asText();
                 double point =0;
-                if(avgPace>=3 && avgPace<6.5){
+                if(avgPace>=3 && avgPace<=6.5){
                     point = (0.2*3) + (distance/1000)*0.3 + 0.5;
                 }
-                if(avgPace>=6.5 && avgPace<9){
+                if(avgPace>6.5 && avgPace<=9){
                     point = (0.2*2) + (distance/1000)*0.3 + 0.5;
                 }
-                if(avgPace>=9 && avgPace<=15){
+                if(avgPace>9 && avgPace<=15){
                     point = (0.2*1) + (distance/1000)*0.3 + 0.5;
                 }
                 String[] splitDate = date.split("T");
@@ -315,13 +315,13 @@ public class ScheduleToken {
                 String date = node.get("start_date_local").asText();
                 String type = node.get("type").asText();
                 double point =0;
-                if(avgPace>=3 && avgPace<6.5){
+                if(avgPace>=3 && avgPace<=6.5){
                     point = (0.2*3) + (distance/1000)*0.3 + 0.5;
                 }
-                if(avgPace>=6.5 && avgPace<9){
+                if(avgPace>6.5 && avgPace<=9){
                     point = (0.2*2) + (distance/1000)*0.3 + 0.5;
                 }
-                if(avgPace>=9 && avgPace<=15){
+                if(avgPace>9 && avgPace<=15){
                     point = (0.2*1) + (distance/1000)*0.3 + 0.5;
                 }
                 String[] splitDate = date.split("T");
