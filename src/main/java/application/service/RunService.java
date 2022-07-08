@@ -65,19 +65,17 @@ public class RunService {
         for (int i = 0; i < runs.size(); i++) {
             Long athleteId = runs.get(i).getAthleteId();
             LocalDate dateInRecord = runs.get(i).getDate();
-            if (localDate.get(athleteId) != null && dateInRecord.isEqual(localDate.get(athleteId))) {
-                continue;
-            }
+//            if (localDate.get(athleteId) != null && dateInRecord.isEqual(localDate.get(athleteId))) {
+//                continue;
+//            }
             if (map.containsKey(athleteId) && count.containsKey(athleteId)) {
                 Statistic statistic = map.get(athleteId);
                 statistic.setAthleteId(athleteId);
                 statistic.setDistance(runs.get(i).getDistance() + map.get(athleteId).getDistance());
                 statistic.setTotalPoint(runs.get(i).getTotalPoint() + map.get(athleteId).getTotalPoint());
-                LocalDate runLocalDate = runs.get(i).getDate();
-                LocalDate mapLocalDate = map.get(athleteId).getDate();
-                if ((runLocalDate.getDayOfMonth() != mapLocalDate.getDayOfMonth()) || (runLocalDate.getMonthValue() != mapLocalDate.getMonthValue())) {
-                    statistic.setRuns(map.get(athleteId).getRuns() + 1);
-                }
+//                LocalDate runLocalDate = runs.get(i).getDate();
+//                LocalDate mapLocalDate = map.get(athleteId).getDate();
+                statistic.setRuns(map.get(athleteId).getRuns() + 1);
                 statistic.setAvgPace((runs.get(i).getPace() + map.get(athleteId).getAvgPace()));
                 map.put(athleteId, statistic);
 
@@ -91,7 +89,7 @@ public class RunService {
                 statistic.setDate(runs.get(i).getDate());
                 statistic.setRuns(1);
                 statistic.setAvgPace(runs.get(i).getPace());
-                map.put(athleteId, statistic);
+                map.put(athleteId, statistic);// tao ra 1 mảng để lưu các phần tử có cùng ngày và cùng athleteId
                 count.put(athleteId, 1);
                 localDate.put(athleteId, dateInRecord);
             }
