@@ -9,6 +9,7 @@ import javax.persistence.Transient;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -24,7 +25,7 @@ public class Statistic {
     private long athleteId;
     private double avgPace;
     private long runs;
-    private LocalDate date;
+    private LocalDateTime date;
     private double totalPoint;
     @Transient
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -85,11 +86,11 @@ public class Statistic {
         this.runs = runs;
     }
 
-    public LocalDate getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

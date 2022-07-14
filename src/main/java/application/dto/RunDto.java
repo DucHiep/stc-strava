@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Transient;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -21,7 +22,7 @@ public class RunDto {
     private long athleteId;
     private double distance;
     private double pace;
-    private LocalDate date;
+    private LocalDateTime date;
     private long movingTime;
     @Transient
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -59,11 +60,11 @@ public class RunDto {
         this.pace = pace;
     }
 
-    public LocalDate getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

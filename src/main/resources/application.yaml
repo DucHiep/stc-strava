@@ -33,7 +33,7 @@ logging:
 distanceConfig: 2000
 minAvgPaceConfig: 3.30
 maxAvgPaceConfig: 15.00
-dateStartconfig: 2022-06-30
+dateStartconfig: 2022-06-30T00:00:00
 
 
 

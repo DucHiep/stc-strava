@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -46,11 +47,11 @@ public class RunService {
     }
 
     public List<Statistic> statistic(String fromDate, String toDate) {
-        LocalDate from = null;
-        LocalDate to = null;
+        LocalDateTime from = null;
+        LocalDateTime to = null;
 
-         from = LocalDate.parse(fromDate);
-         to = LocalDate.parse(toDate);
+         from = LocalDateTime.parse(fromDate);
+         to = LocalDateTime.parse(toDate);
 
         List<Run> runs = runRepositoy.statistic(from, to);
         List<Statistic> statistics = new ArrayList<>();
@@ -58,13 +59,13 @@ public class RunService {
 
         HashMap<Long, Statistic> map = new HashMap<>();
         HashMap<Long, Integer> count = new HashMap<>();
-        HashMap<Long, LocalDate> localDate = new HashMap<>();
+        HashMap<Long, LocalDateTime> localDate = new HashMap<>();
 
 
 
         for (int i = 0; i < runs.size(); i++) {
             Long athleteId = runs.get(i).getAthleteId();
-            LocalDate dateInRecord = runs.get(i).getDate();
+            LocalDateTime dateInRecord = runs.get(i).getDate();
 //            if (localDate.get(athleteId) != null && dateInRecord.isEqual(localDate.get(athleteId))) {
 //                continue;
 //            }
